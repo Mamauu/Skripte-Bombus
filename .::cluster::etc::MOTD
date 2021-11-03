@@ -1,0 +1,9 @@
+*******************  New storage policy on /work *********************
+**********************************************************************
+From January 1st, 2021, an automatic deletion policy on /work 
+(alias ~/wt) will delete all files older than 90 days to prevent 
+filling of the file system.
+Please review your data below /work and save necessary data 
+elsewhere as soon as possible.
+In case of problems or questions please contact the HPC support team.
+**********************************************************************

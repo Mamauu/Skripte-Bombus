@@ -172,9 +172,9 @@ def plot_locpot(dichte,locpot_dim,i=0):
 	min = np.min(dichte)-3
 	max = np.max(dichte)+3
 	plt.ylim(min,max)
-	plt.plot(dichte,   c='u')
-	plt.plot([x3-16,-50],[x3-16,50],   c='r')
-	plt.plot([4,-50],[4,50],   c='r')
+	plt.plot(dichte,   c='b')
+	plt.plot([x3-16,x3-16],[-50,50],   c='r')
+	plt.plot([4,4],[-50,50],   c='r')
 	plt.xlabel('calculation step')
 	plt.ylabel('Potential')
 	plt.show()
@@ -188,4 +188,4 @@ def plot_locpot(dichte,locpot_dim,i=0):
 
 
 
-	
+
