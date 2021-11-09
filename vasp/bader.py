@@ -21,12 +21,38 @@ def file_names_int(calc_num,file_name,ending=""):
     return names,numbers_np
 
 
+def get_atom_types(filename="POSCAR"): 
+	"""
+	liest atom types and count of them from the POSCAR
+	Args:
+		filename: /
+	Returns:
+		atoms (int): number of atoms 
+		...
+	"""
+	file = open(filename)
+	all_lines = file.readlines()
+	atom_types_list = all_lines[5].split()
+	atom_types = [str(i) for i in atom_types_list]
+	atom_list = all_lines[6].split()
+	atom_counts = [int(i) for i in atom_list]
+	atoms = sum(atom_counts) 
+	print("atomanzahl, typen, anzahl pro type: \n",atoms,atom_types, atom_counts)
+	box = [0, 0, 0]
+	box[0] = float(all_lines[2].split()[0])
+	box[1] = float(all_lines[3].split()[1])
+	box[2] = float(all_lines[4].split()[2])
+	return  atoms, atom_types, atom_counts, box
+
+
 def bader_charge_from_bcf(filename,zval,atom_types,atom_counts):
 	"""
 	reads the bader results (BCF) and calculates the charge of the different atom types
 	Args:
 		filename  (str): location of the BCF file from bader
 		zval (list): zvalue of all atoms at this step
+		atom_types (list):  names of the atoms
+		atom_counts (list): number of atoms by type
 	Returns:
 		charge_atom  (list): list of the charge of the atom_types per atom
 		charge_total (list): list of the charge of the atom_types total
@@ -45,8 +71,9 @@ def bader_charge_from_bcf(filename,zval,atom_types,atom_counts):
 		data_sp = data_sort[(data_sort.nummer >= start) & (data_sort.nummer <= stop)]
 
 		#print(data_sp)
-		charge_atom.append((data_sp['charge'].sum()/anzahl)-zval[i])
-		charge_total.append(((data_sp['charge'].sum()/anzahl)-zval[i])*anzahl)
+		if atom_counts != 0:
+			charge_atom.append((data_sp['charge'].sum()/anzahl)-zval[i])
+			charge_total.append(((data_sp['charge'].sum()/anzahl)-zval[i])*anzahl)
 		#print(atom_types[i],"per atom:",(data_sp['charge'].sum()/anzahl)-zval[i])
 		#print(atom_types[i],"total   :",((data_sp['charge'].sum()/anzahl)-zval[i])*anzahl)
 	return charge_atom, charge_total
@@ -57,6 +84,9 @@ def bader_charge_for_all_steps(atom_types,atom_counts,zval,calcs=20):
 	reads the charge via the bader_from_bcf function for every Potentiostat step and writes it in the 2_bader.txt file
 	Args:
 		calcs (int): number of Potentiostat steps
+		zval (list): zvalue of all atoms at this step
+		atom_types (list):  names of the atoms
+		atom_counts (list): number of atoms by type
 	Returns:
 		/
 	"""
@@ -88,6 +118,7 @@ def bader_charge_for_all_steps(atom_types,atom_counts,zval,calcs=20):
 
 
 def bader_plot(charge_total_list, charge_atom_list, zval_Ne_list,atom_type_list):
+	#plottet die Bader Ladungen
 	x = (8-zval_Ne_list)
 	maximum = np.max(x)
 
