@@ -33,6 +33,50 @@ def XDATCAR_only_pos():
 	return 0
 
 
+def get_box_POSCAR(filename="POSCAR"): 
+	"""
+	liest boyx größe aus POSCAR aus
+	Args:
+		filename: /
+	Returns:
+		box (list): vektor with box dimension in A 
+		...
+	"""
+	file = open(filename)
+	all_lines = file.readlines()
+	box = [0, 0, 0]
+	box[0] = float(all_lines[2].split()[0])
+	box[1] = float(all_lines[3].split()[1])
+	box[2] = float(all_lines[4].split()[2])
+	file.close()
+	return   box
+
+
+def dipol_to_potential(dipole,box):
+	"""
+	Calculates the potential from the Dipolemoment
+	Args:
+		/
+	Returns:
+		potential_dipol (float): potential in V
+	"""
+	e0 = 8.85418E-12
+	potential_dipol = dipole*1E-10*1.602E-019/(e0*box[0]*box[1]*1E-20)
+	return potential_dipol
+
+
+def create_target_list(steps,target_max,ramp): 
+	#makes list with target potentials for each step
+	targte_list=[]
+	for i in range(1,steps+1):
+		if ramp == True: #setzt target zum maximalen Wert oder erhöht diesen linear
+			targte_list.append(target_max*(i)/steps)
+		else:
+			targte_list.append(target_max)
+
+	return targte_list
+
+
 def locpot_info(filename="LOCPOT"): 
 	"""
 	get infos from the LOCPOT file
@@ -175,8 +219,8 @@ def plot_locpot(dichte,locpot_dim,i=0):
 	plt.plot(dichte,   c='b')
 	plt.plot([x3-16,x3-16],[-50,50],   c='r')
 	plt.plot([4,4],[-50,50],   c='r')
-	plt.xlabel('calculation step')
-	plt.ylabel('Potential')
+	plt.xlabel('z [bins]')
+	plt.ylabel('V [eV]')
 	plt.show()
 	plt.savefig(f"2_locpot_{i}.png", dpi=300)
 	plt.close()

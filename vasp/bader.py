@@ -42,6 +42,7 @@ def get_atom_types(filename="POSCAR"):
 	box[0] = float(all_lines[2].split()[0])
 	box[1] = float(all_lines[3].split()[1])
 	box[2] = float(all_lines[4].split()[2])
+	file.close()
 	return  atoms, atom_types, atom_counts, box
 
 
@@ -71,9 +72,12 @@ def bader_charge_from_bcf(filename,zval,atom_types,atom_counts):
 		data_sp = data_sort[(data_sort.nummer >= start) & (data_sort.nummer <= stop)]
 
 		#print(data_sp)
-		if atom_counts != 0:
+		if atom_counts[i] > 0:
 			charge_atom.append((data_sp['charge'].sum()/anzahl)-zval[i])
 			charge_total.append(((data_sp['charge'].sum()/anzahl)-zval[i])*anzahl)
+		if atom_counts[i] == 0:
+			charge_atom.append(0)
+			charge_total.append(0)			
 		#print(atom_types[i],"per atom:",(data_sp['charge'].sum()/anzahl)-zval[i])
 		#print(atom_types[i],"total   :",((data_sp['charge'].sum()/anzahl)-zval[i])*anzahl)
 	return charge_atom, charge_total
@@ -121,6 +125,7 @@ def bader_plot(charge_total_list, charge_atom_list, zval_Ne_list,atom_type_list)
 	#plottet die Bader Ladungen
 	x = (8-zval_Ne_list)
 	maximum = np.max(x)
+	print("shape of x and y: ",x.shape,charge_atom_list.shape)
 
 	for i, name in enumerate(atom_type_list):
 		plt.scatter(x,charge_atom_list[:,i], label=name)
