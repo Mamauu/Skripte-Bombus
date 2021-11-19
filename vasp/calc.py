@@ -67,12 +67,12 @@ def dipol_to_potential(dipole,box):
 
 def create_target_list(steps,target_max,ramp): 
 	#makes list with target potentials for each step
-	targte_list=[]
+	target_list=[]
 	for i in range(1,steps+1):
 		if ramp == True: #setzt target zum maximalen Wert oder erhöht diesen linear
-			targte_list.append(target_max*(i)/steps)
+			target_list.append(target_max*(i)/steps)
 		else:
-			targte_list.append(target_max)
+			target_list.append(target_max)
 
 	return targte_list
 
