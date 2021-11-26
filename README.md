@@ -13,7 +13,9 @@ bader_analyse.py
 etc.
 
 # feste Skripte
+bashrc backup: in Home Folder -> cp .bashrc /fibus/fs2/04/con4309/Skripte-bombus/bashrc
 bader + chgsum.pl / kopierte Skripte für bader Analyse
 etc.
 
-backup ./bashrc?
+
+
