@@ -1,2 +1,2 @@
-# code
- code for running and analysis of vasp
+# Skripte Bombus
+Skripte zum laufen und analysieren von Vasp Rechnungen
