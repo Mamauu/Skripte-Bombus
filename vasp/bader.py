@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import math
+import freud
 
 def file_names_int(calc_num,file_name,ending=""):
     """
@@ -157,6 +158,36 @@ def bader_plot(charge_total_list, charge_atom_list, zval_Ne_list,atom_type_list)
 	return 0
 
 
+def get_distance(atoms, atom_types, atom_counts, box,filename="CONTCAR"):
+	#gibt für jedes Iod den Abstand zum nächsten Iod aus
+	#inputs durch get_atom_types() gegeben
+	minval_list=[]
+	f = open(filename,"r")
+	all_lines = f.readlines()
+	positions = np.zeros(shape=(atoms,3))
+	box2 = freud.Box(box[0],box[1],box[2])
+
+	for i in range(atoms):
+		pos_line = all_lines[i+9] # liest Zeile mit Position ein
+		pos_filter = list(filter(None,pos_line.split(" "))) #bereinigt Linien und schreibt sie in Liste
+		pos = [float(pos_filter[0]),float(pos_filter[1]),float(pos_filter[2])] #konvertiert Werte zu float
+		positions[i][0] = float(pos_filter[0])*box[0]
+		positions[i][1] = float(pos_filter[1])*box[1]
+		positions[i][2] = float(pos_filter[2])*box[2]
+
+	for i,type in enumerate(atom_types):
+		if type == "I":
+			atom_before_iod = sum(atom_counts[0:i])
+			atoms_iod = atom_counts[i]
+
+	pos_iod=positions[atom_before_iod:atom_before_iod+atoms_iod]
+
+	for i in range(atoms_iod):
+		distance_iod = box2.compute_all_distances(pos_iod[i],pos_iod)
+		minval = np.min(distance_iod[np.nonzero(distance_iod)])
+		minval_list.append(minval)
+	#print("geringster Abstand zum nächsten Iod: ",minval_list)
+	return minval_list
 
 
 

@@ -74,7 +74,7 @@ def create_target_list(steps,target_max,ramp):
 		else:
 			target_list.append(target_max)
 
-	return targte_list
+	return target_list
 
 
 def locpot_info(filename="LOCPOT"): 
