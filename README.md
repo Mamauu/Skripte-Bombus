@@ -4,7 +4,7 @@ Skripte zum laufen und analysieren von Vasp Rechnungen
 # Funktions Datenbank 
 vasp			/ Modul
 	calc.py	/ Potentiostat
-	bader.py	/ Analyse bader/Distanz
+	bader.py	/ Analyse bader,Distanz etc.
 
 # Skripte Datenbank
 plot_HILLSPOT.py	/ plottet Metadynamic Hills
@@ -16,7 +16,7 @@ run.sh
 etc.
 
 # feste Skripte
-bashrc 		/ backup: in Home Folder -> cp .bashrc /fibus/fs2/04/con4309/Skripte-bombus/bashrc
+bashrc 		/ backups bashrc
 bader + chgsum.pl 	/ kopierte Skripte für bader Analyse
 
 
