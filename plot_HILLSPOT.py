@@ -9,7 +9,7 @@ def gaussian(x, mu, sig): #erzeugt Gaussians aus Breite und Höhe
     return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
     
 #Parameter, die gesetzt werden müssen
-name = "Iod2"
+name = "Standart"
 step = 10 # alle wie viele Schritte wird Gaussian geschrieben
 par_start = 1
 par_stop  = 6

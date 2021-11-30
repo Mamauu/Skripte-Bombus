@@ -17,9 +17,9 @@ alias ssh='ssh -X'
 
 
 # bashrc commands bombus
-export PATH="/fibus/fs2/04/con4309/Skripte-bombus/feste_Skripte:$PATH"
+export PATH="/fibus/fs2/04/con4309/Skripte-Bombus/feste_Skripte:$PATH"
 alias warteschlange="squeue -u con4309"
 alias queue="squeue -u con4309"
 alias run="sbatch run.sh"
 
-alias plot_HILLSPOT="python3 /fibus/fs2/04/con4309/Skripte-bombus/Skripte_datenbank/plot_HILLSPOT.py"
+alias plot_HILLSPOT="python3 /fibus/fs2/04/con4309/Skripte-Bombus/plot_HILLSPOT.py"
