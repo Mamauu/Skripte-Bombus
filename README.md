@@ -1,12 +1,10 @@
 # Skripte Bombus
 Skripte zum laufen und analysieren von Vasp Rechnungen
 
-# Funktions Datenbank 
-vasp			/ Modul
+# Skripte Datenbank
+vasp			/ Modul mit Funktionen
 	calc.py	/ Potentiostat
 	bader.py	/ Analyse bader,Distanz etc.
-
-# Skripte Datenbank
 plot_HILLSPOT.py	/ plottet Metadynamic Hills
 
 bader_analyse.py
