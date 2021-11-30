@@ -35,12 +35,11 @@ def XDATCAR_only_pos():
 
 def get_box_POSCAR(filename="POSCAR"): 
 	"""
-	liest boyx größe aus POSCAR aus
+	liest box größe aus POSCAR aus
 	Args:
 		filename: /
 	Returns:
-		box (list): vektor with box dimension in A 
-		...
+		box (list): vektor with box dimension [x,y,z] in Anström
 	"""
 	file = open(filename)
 	all_lines = file.readlines()
@@ -49,22 +48,26 @@ def get_box_POSCAR(filename="POSCAR"):
 	box[1] = float(all_lines[3].split()[1])
 	box[2] = float(all_lines[4].split()[2])
 	file.close()
-	return   box
+	return box
 
 
 def dipol_to_potential(dipole,box):
 	"""
 	Calculates the potential from the Dipolemoment
 	Args:
-		/
+		dipole (float): dipolmoment in eA 	
+		box (list): 	 vektor with box dimension [x,y,z] in Anström
 	Returns:
 		potential_dipol (float): potential in V
 	"""
-	e0 = 8.85418E-12
-	potential_dipol = dipole*1E-10*1.602E-019/(e0*box[0]*box[1]*1E-20)
+	e0 = 8.85418E-12 # Elektrische Feldkonstantein F/m
+	e  = 1.602E-019  # Elementarladung in C
+	Angs = 1E-10	  # Angström
+	potential_dipol = dipole*Angs*e/(e0*box[0]*Angs*box[1]*Angs) #in SI Einheiten umgerechnet
 	return potential_dipol
 
 
+#bis hier fertig
 def create_target_list(steps,target_max,ramp): 
 	#makes list with target potentials for each step
 	target_list=[]
