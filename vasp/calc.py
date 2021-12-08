@@ -68,15 +68,14 @@ def dipol_to_potential(dipole,box):
 
 
 #bis hier fertig
-def create_target_list(steps,target_max,ramp): 
+def create_target_list(steps, start_V, target_V, ramp): 
 	#makes list with target potentials for each step
-	target_list=[]
 	for i in range(1,steps+1):
 		if ramp == True: #setzt target zum maximalen Wert oder erhöht diesen linear
-			target_list.append(target_max*(i)/steps)
+			target_list = np.linspace(start_V, target_V, num=steps, endpoint=True)
 		else:
-			target_list.append(target_max)
-
+			target_list.append(target_V)
+	print(target_list)
 	return target_list
 
 
