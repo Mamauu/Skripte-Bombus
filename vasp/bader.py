@@ -143,7 +143,11 @@ def bader_plot(charge_total_list, charge_atom_list, zval_Ne_list,atom_type_list)
 	maximum = np.max(x)
 
 	for i, name in enumerate(atom_type_list):
-		plt.scatter(x,charge_total_list[:,i], label=name)
+		plt.scatter(x,charge_total_list[:,i]-charge_total_list[0,i], label=name)
+		coef = np.polyfit(x,charge_total_list[:,i]-charge_total_list[0,i],1)
+		poly1d_fn = np.poly1d(coef) 
+		plt. plot(x, poly1d_fn(x))
+
 	plt.axhline()
 	plt.xlabel('ZVAL change total in e')
 	plt.ylabel('Ladung total in e')
