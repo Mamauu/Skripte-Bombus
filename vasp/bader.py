@@ -125,6 +125,7 @@ def bader_charge_for_all_steps(atom_types,atom_counts,zval,calcs=20):
 def bader_plot(charge_total_list, charge_atom_list, zval_Ne_list,atom_type_list):
 	#plottet die Bader Ladungen
 	x = (8-zval_Ne_list)
+	minimum = np.min(x)
 	maximum = np.max(x)
 	print("shape of x and y: ",x.shape,charge_atom_list.shape)
 
@@ -133,13 +134,14 @@ def bader_plot(charge_total_list, charge_atom_list, zval_Ne_list,atom_type_list)
 	plt.axhline()
 	plt.xlabel('ZVAL change per atom in e')
 	plt.ylabel('Ladung per atom in e')
-	plt.xlim(0,maximum)
+	plt.xlim(minimum,maximum)
 	plt.legend(loc="upper right")
 	plt.show()
 	plt.savefig("2_baderplot_atom.png", dpi=300)
 	plt.close()
 
 	x = (8-zval_Ne_list)*18
+	minimum = np.min(x)
 	maximum = np.max(x)
 
 	for i, name in enumerate(atom_type_list):
@@ -151,7 +153,7 @@ def bader_plot(charge_total_list, charge_atom_list, zval_Ne_list,atom_type_list)
 	plt.axhline()
 	plt.xlabel('ZVAL change total in e')
 	plt.ylabel('Ladung total in e')
-	plt.xlim(0,maximum)
+	plt.xlim(minimum,maximum)
 	plt.legend(loc="upper right")
 	plt.show()
 	plt.savefig("2_baderplot_total.png", dpi=300)
