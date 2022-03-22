@@ -5,11 +5,12 @@ import math
 import freud
 import os.path
 
+
 def file_names_int(calc_num,file_name,ending=""):
     """
     gives out names of files when doing x calculations
     Args:
-        calc_num (int): Anzahl an Rechnungen
+        calc_num (int): number of calculations
         file_name (str): start of the file like "CONTCAR_"
     Returns:
         names (list): name of files
@@ -25,12 +26,14 @@ def file_names_int(calc_num,file_name,ending=""):
 
 def get_atom_types(filename="POSCAR"): 
 	"""
-	liest atom types and count of them from the POSCAR
+	read atom types and number of each type from the POSCAR
 	Args:
 		filename: /
 	Returns:
 		atoms (int): number of atoms 
-		...
+		atom_types (list):
+		atom_counts (list):
+		box (list): xyz dimensions of box
 	"""
 	file = open(filename)
 	all_lines = file.readlines()
@@ -141,8 +144,8 @@ def bader_plot(charge_total_list, charge_atom_list, zval_Ne_list,atom_type_list)
 	plt.ylabel('Ladung per atom in e')
 	plt.xlim(minimum,maximum)
 	plt.legend(loc="upper right")
-	plt.show()
 	plt.savefig("2_baderplot_atom.png", dpi=300)
+	#plt.show()
 	plt.close()
 
 	x = (8-zval_Ne_list)*18
@@ -160,8 +163,8 @@ def bader_plot(charge_total_list, charge_atom_list, zval_Ne_list,atom_type_list)
 	plt.ylabel('Ladung total in e')
 	plt.xlim(minimum,maximum)
 	plt.legend(loc="upper right")
-	plt.show()
 	plt.savefig("2_baderplot_total.png", dpi=300)
+	#plt.show()
 	plt.close()
 	
 	#ax1.plot([0,2.4],[0,2.4],   c='r')
