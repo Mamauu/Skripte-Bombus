@@ -6,12 +6,27 @@ sys.path.append('/fibus/fs2/04/con4309/Skripte-Bombus')
 from vasp import bader
 #from vasp import calc
 
-calcs = 300
-#atom_types=["Pt","Ne","O","H"]
-#atom_counts = [18, 18, 64, 128]
-#zval = [10, 0, 6, 1]
-#atom_types = ["C ","Ne","O ","H ","I ","Na"]
-#atom_counts = [60, 18, 38, 76, 2, 2]
+def gaussian(x, mu, sig): #erzeugt Gaussians aus Breite und Höhe
+    return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
+    
+par_start = 1
+par_stop  = 7
+header = 1
+
+data = np.genfromtxt("HILLSPOT",skip_header=header, skip_footer=0)
+
+x_values = np.linspace(par_start, par_stop, 500)
+y=np.zeros(500)
+
+for i in range(data.shape[0]):
+    h   = data[i][1]
+    w   = data[i][2]
+    pos = data[i][0]
+    y = y + h*gaussian(x_values, pos, w)
+
+
+
+calcs = 1000
 zval = [4, 0, 6, 1, 7, 1]
 atoms, atom_types, atom_counts, box = bader.get_atom_types()
 
@@ -56,68 +71,42 @@ plt.savefig("2_abstand_Iod.png", dpi=300)
 plt.close()
 
 
-fig, ax1 = plt.subplots()
 Ne_charge = (8-zval_Ne_list)*18
+time = index*51/1000
+fig, axs = plt.subplots(2, 2)
 for i in range(atom_counts[4]):
-	ax1.plot(index,Iod_abstand_list[:,i],label=f"Abstand Iod{i+1} [A]")
-ax1.plot(index,dipole,label="Potential [V]")
-ax1.plot(index,Ne_charge,label="zval_change [e]")
-ax1.set_xlabel('Rechnungs index (ca. 50fs)')
-ax1.set_ylabel('alles mögliche')
+	axs[0, 0].plot(time,Iod_abstand_list[:,i],label=f"Abstand Iod{i+1} [A]",color="tab:orange")
+#axs[0, 0].plot([0.200*51,0.200*51],[2,7],"b:")
+axs[0, 0].set_xlabel('time / ps')
+axs[0, 0].set_ylabel('Distance Iodine / $\AA$')
+axs[0, 0].axvline(0.2*51, color='black')
+#axs[0, 0].set_title("Abstand Iod")
+#axs[0, 0].legend()
 
-ax2 = ax1.twinx() 
-ax2.plot(charge_atom_list[:,4],color="k", label="Iod Charge [e]")
-ax2.set_ylabel('Iod Charge [e]')
+axs[0, 1].plot(time,dipole,label="Potential / V",color="tab:blue")
+axs[0, 1].plot(time,Ne_charge,label="zval_change / e",color="tab:red")
+#axs[0, 1].plot([0.2*51,0.2*51],[0,3],"b:")
+axs[0, 1].set_xlabel('time / ps')
+axs[0, 1].set_ylabel('Potential / V and charge / e')
+axs[0, 1].axvline(0.2*51, color='black')
+axs[0, 1].legend()
 
-ax1.legend(loc="lower center")
-ax2.legend(loc="upper center")
+axs[1, 0].plot(x_values, -y,color="black")
+axs[1, 0].set_xlabel("Distance / $\AA$")
+axs[1, 0].set_ylabel("Metadynamic Potential / eV")
+
+axs[1, 1].plot(time,charge_atom_list[:,4],color="tab:purple", label="Iod Charge [e]")
+axs[1, 1].set_xlabel('time / ps')
+axs[1, 1].set_ylabel('Bader charge iodine / e')
+axs[1, 1].axvline(0.2*51, color='black')
+#axs[1, 0].legend()
+
+
+
+
+fig.tight_layout()
 plt.show()
-plt.savefig("2_combined_plot.png", dpi=300)
+plt.savefig("2_combined_plot.png", dpi=500)
 plt.close()
 
 
-"""
-names,numbers_np = bader.file_names_int(calcs,"data/CONTCAR_",ending="")
-
-for i in [1]:
-	distanz_list = vasp.get_distance(names,indezes,box)
-	#vasp.plot_distance(zval_Ne_list,distanz_list,neon_number)
-	x = (8-zval_Ne_list)*neon_number
-	plt.scatter(x, distanz_list,label="Distanz")
-	plt.xlabel('ZVAL change in e')
-	plt.ylabel('Distanz in A')
-	plt.legend(loc="lower left")
-	plt.savefig("2_distanz.png")
-	plt.show()
-"""
-"""
-#neon_number = atom_counts[1]
-x = (8-zval_Ne_list)*18
-maximum = np.max(x)
-
-#plt.scatter(index,dipole, label="dipole",   c='black')
-plt.scatter(index,potential, label="potential",   c='b')
-plt.plot([0,200],[0,4],   c='b')
-plt.scatter(index,x, label="charge",   c='r')
-plt.scatter(index,charge_atom_list[:,4], label="iod charge",   c='tab:orange')
-
-
-#plt.scatter(potential,charge_atom_list[:,4], label="test")
-#plt.scatter(x,charge_atom_list[:,0], label="C")
-#plt.scatter(x,charge_atom_list[:,1], label="Ne")
-#plt.scatter(x,charge_atom_list[:,2], label="O")
-#plt.scatter(x,charge_atom_list[:,3], label="H")
-#plt.scatter(x,charge_atom_list[:,4], label="Iod")
-#plt.scatter(x,charge_atom_list[:,5], label="Na")
-#plt.axhline()
-#plt.xlabel('ZVAL change total in e')
-#plt.ylabel('Ladung per atom in e')
-#plt.xlim(0,maximum)
-plt.legend(loc="upper left")
-plt.show()
-plt.savefig("2_baderplot.png", dpi=300)
-
-#ax1.plot([0,2.4],[0,2.4],   c='r')
-#ax1.plot([0,2.4],[0,-2.4],   c='b')
-
-"""

@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import math
 import freud
+import os.path
 
 def file_names_int(calc_num,file_name,ending=""):
     """
@@ -73,12 +74,13 @@ def bader_charge_from_bcf(filename,zval,atom_types,atom_counts):
 		data_sp = data_sort[(data_sort.nummer >= start) & (data_sort.nummer <= stop)]
 
 		#print(data_sp)
+		if atom_counts[i] == 0:
+			charge_atom.append(0)
+			charge_total.append(0)	
 		if atom_counts[i] > 0:
 			charge_atom.append((data_sp['charge'].sum()/anzahl)-zval[i])
 			charge_total.append(((data_sp['charge'].sum()/anzahl)-zval[i])*anzahl)
-		if atom_counts[i] == 0:
-			charge_atom.append(0)
-			charge_total.append(0)			
+		
 		#print(atom_types[i],"per atom:",(data_sp['charge'].sum()/anzahl)-zval[i])
 		#print(atom_types[i],"total   :",((data_sp['charge'].sum()/anzahl)-zval[i])*anzahl)
 	return charge_atom, charge_total
@@ -97,7 +99,10 @@ def bader_charge_for_all_steps(atom_types,atom_counts,zval,calcs=20):
 	"""
 	f = open("2_bader.txt", "w")
 	f.write("index zval_ne total charge of : C Ne O H I Na \n")
-	names,numbers_np = file_names_int(calcs,"bader/BCF_",ending=".dat")
+	if os.path.exists("bader_data/") == True:
+		names,numbers_np = file_names_int(calcs,"bader_data/BCF_",ending=".dat")
+	if os.path.exists("bader/") == True:
+		names,numbers_np = file_names_int(calcs,"bader/BCF_",ending=".dat")
 
 	results = np.genfromtxt("2_results.txt",skip_header=1, skip_footer=0)
 	zval_Ne_list = results[:,1]

@@ -51,6 +51,36 @@ def get_box_POSCAR(filename="POSCAR"):
 	return box
 
 
+def get_start_step(): 
+	"""
+	get the last calculated step number
+	Args:
+		/
+	Returns:
+		start_step (int): new starting index
+	"""
+	data = np.genfromtxt("2_results.txt")
+	start_step = data.shape[0]
+	print("new start step: ", start_step)
+	return start_step
+
+
+def get_start_zval(): 
+	"""
+	gets the zval value of the last calculation step
+	Args:
+		/
+	Returns:
+		zval (int): zval value of last potentiostat step
+	"""
+	f = open("POTCAR", "r")
+	zval_line = f.readlines()[2329]
+	zval = float(zval_line.split()[5])
+	f.close()
+	print("new start step: ", zval)
+	return zval
+
+
 def dipol_to_potential(dipole,box):
 	"""
 	Calculates the potential from the Dipolemoment
@@ -70,12 +100,13 @@ def dipol_to_potential(dipole,box):
 #bis hier fertig
 def create_target_list(steps, start_V, target_V, ramp): 
 	#makes list with target potentials for each step
-	for i in range(1,steps+1):
-		if ramp == True: #setzt target zum maximalen Wert oder erhöht diesen linear
-			target_list = np.linspace(start_V, target_V, num=steps, endpoint=True)
-		else:
-			target_list.append(target_V)
-	print(target_list)
+
+	if ramp == True: #setzt target zum maximalen Wert oder erhöht diesen linear
+		target_list = np.linspace(start_V, target_V, num=steps, endpoint=True)
+	if ramp == False:
+		target_list = np.linspace(target_V, target_V, num=steps, endpoint=True)
+
+	print("target list Potential: ",target_list)
 	return target_list
 
 
