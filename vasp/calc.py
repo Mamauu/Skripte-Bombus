@@ -65,42 +65,33 @@ def get_start_step():
 	return start_step
 
 
-def get_start_zval(): 
+def get_start_zval(zval_line=2329): 
 	"""
-	gets the zval value of the last calculation step
+	gets the zval value of the last calculation step, only works for C/Ne/H/O/I/Na Systems
 	Args:
-		/
+		zval_line (int): line in POTCAR where the Neon ZVAL value is read from
 	Returns:
 		zval (int): zval value of last potentiostat step
 	"""
 	f = open("POTCAR", "r")
-	zval_line = f.readlines()[2329]
+	zval_line = f.readlines()[zval_line]
 	zval = float(zval_line.split()[5])
 	f.close()
 	print("new start step: ", zval)
 	return zval
 
 
-def dipol_to_potential(dipole,box):
-	"""
-	Calculates the potential from the Dipolemoment
-	Args:
-		dipole (float): dipolmoment in eA 	
-		box (list): 	 vektor with box dimension [x,y,z] in Anström
-	Returns:
-		potential_dipol (float): potential in V
-	"""
-	e0 = 8.85418E-12 # Elektrische Feldkonstantein F/m
-	e  = 1.602E-019  # Elementarladung in C
-	Angs = 1E-10	  # Angström
-	potential_dipol = dipole*Angs*e/(e0*box[0]*Angs*box[1]*Angs) #in SI Einheiten umgerechnet
-	return potential_dipol
-
-
-#bis hier fertig
 def create_target_list(steps, start_V, target_V, ramp): 
-	#makes list with target potentials for each step
-
+	"""
+	makes list with target potentials for each step
+	Args:
+		steps (int): 	number of calculations
+		start_V (int): 	starting voltage
+		target_V (int): end voltage
+		ramp (boolean): true=linear ramp start to target, false=constant at target
+	Returns:
+		target_list (list): 
+	"""
 	if ramp == True: #setzt target zum maximalen Wert oder erhöht diesen linear
 		target_list = np.linspace(start_V, target_V, num=steps, endpoint=True)
 	if ramp == False:
@@ -185,7 +176,8 @@ def get_dipole_moments_average(names):
 	Args:
 		names (list): filenames
 	Returns:
-		dipole_list (list): list with the average dipol for this OUTCAR file
+		dipole_list (list):     list with the average dipol for this OUTCAR file
+		dipole_list_dev (list): list with the stanrd deviation of the dipol for this OUTCAR file
 	""" 
 	dipole_list = []
 	dipole_list_dev=[]
@@ -199,18 +191,34 @@ def get_dipole_moments_average(names):
 		dipole_list.append(dipole_average)
 		dipole_list_dev.append(dipole_dev)
 	return dipole_list, dipole_list_dev
+
+
+def dipol_to_potential(dipole,box):
+	"""
+	Calculates the potential from the Dipolemoment
+	Args:
+		dipole (float): dipolmoment in eA 	
+		box (list): 	vektor with box dimension [x,y,z] in Anström
+	Returns:
+		potential_dipol (float): potential in V
+	"""
+	e0 = 8.85418E-12 # Elektrische Feldkonstantein F/m
+	e  = 1.602E-019  # Elementarladung in C
+	Angs = 1E-10	  # Angström
+	potential_dipol = dipole*Angs*e/(e0*box[0]*Angs*box[1]*Angs) #in SI Einheiten umgerechnet
+	return potential_dipol
 	
 	
 def locpot_potential(locpot_dim,atoms,filename="LOCPOT"):
 	"""
 	read Potential from LOCPOT file
 	Args:
-		filename = filename of The LOCPOT
-		locpot_dim = dimensions of the locpot file
-		atoms = number of atoms
+		filename (str): filename of The LOCPOT
+		locpot_dim (list): dimensions of the locpot file
+		atoms (int): number of atoms
 	Returns:
-		dichte: potential verlauf entlanf z in eV
-		potential: potential in eV
+		dichte (list): potential along z in eV
+		potential (float): measured potential in eV
 	""" 
 	dichte = []
 	print("datei potential:",filename)
@@ -240,11 +248,20 @@ def locpot_potential(locpot_dim,atoms,filename="LOCPOT"):
 		dichte.append(z_dichte)
 
 	potential = dichte[x3-16]-dichte[4]
-	print("potential:", potential)
+	print("potential aus LOCPOT:", potential)
 	return dichte, potential
 
 
 def plot_locpot(dichte,locpot_dim,i=0):
+	"""
+	plottet potential from the LOCPOT file 
+	Args:
+		dichte (list): potential along z in eV
+		locpot_dim (list): dimensions of the locpot file
+		i (int): number of the calculation
+	Returns:
+		/
+	"""
 	x3 = locpot_dim[2]	
 	min = np.min(dichte)-3
 	max = np.max(dichte)+3
