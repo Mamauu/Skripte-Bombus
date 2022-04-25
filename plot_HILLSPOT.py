@@ -12,7 +12,7 @@ def gaussian(x, mu, sig): #erzeugt Gaussians aus Breite und Höhe
 name = "Standart"
 step = 10 # alle wie viele Schritte wird Gaussian geschrieben
 par_start = 1
-par_stop  = 7
+par_stop  = 9
 header = 1
 
 data = np.genfromtxt("HILLSPOT",skip_header=header, skip_footer=0)

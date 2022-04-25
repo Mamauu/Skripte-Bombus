@@ -87,6 +87,37 @@ def bader_charge_from_bcf(filename,zval,atom_types,atom_counts):
 		#print(atom_types[i],"per atom:",(data_sp['charge'].sum()/anzahl)-zval[i])
 		#print(atom_types[i],"total   :",((data_sp['charge'].sum()/anzahl)-zval[i])*anzahl)
 	return charge_atom, charge_total
+	
+
+def bader_iodine_atoms(filename,zval,atom_types,atom_counts):
+	"""
+	reads the bader results (BCF) and calculates the charge of the different atom types
+	Args:
+		filename  (str): location of the BCF file from bader
+		zval (list): zvalue of all atoms at this step
+		atom_types (list):  names of the atoms
+		atom_counts (list): number of atoms by type
+	Returns:
+		iodine_charge (list): 
+	"""
+	data = pd.read_csv(filename,skiprows=2,skipfooter=1,delim_whitespace=True,names=['a','b','c','d','charge','nummer','g'],engine='python')
+	data_sort = data.sort_values(by='nummer')
+
+	for i in range(len(atom_counts)):
+		start = 1 + sum(atom_counts[0:i])
+		stop  = sum(atom_counts[0:i+1])
+		anzahl = stop-start+1
+
+		data_sp = data_sort[(data_sort.nummer >= start) & (data_sort.nummer <= stop)]
+		if i == 4:
+			iod_atom_ladungen = np.array(data_sp['charge']-zval[i])
+			try:
+				iodine_charge = np.reshape((iod_atom_ladungen),(1,3))
+			except:
+				print(iod_atom_ladungen)
+				iodine_charge = np.reshape((iod_atom_ladungen[1:]),(1,3))
+
+	return iodine_charge
 
 
 def bader_charge_for_all_steps(atom_types,atom_counts,zval,calcs=20):
@@ -127,7 +158,7 @@ def bader_charge_for_all_steps(atom_types,atom_counts,zval,calcs=20):
 	f.close()
 	charge_total_list = np.array(charge_total_list)
 	charge_atom_list = np.array(charge_atom_list)
-	return charge_total_list, charge_atom_list,zval_Ne_list
+	return charge_total_list, charge_atom_list, zval_Ne_list
 
 
 def bader_plot(charge_total_list, charge_atom_list, zval_Ne_list,atom_type_list):
