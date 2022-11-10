@@ -51,6 +51,7 @@ def get_atom_types(filename="POSCAR"):
 	return  atoms, atom_types, atom_counts, box
 
 
+
 def bader_charge_from_bcf(filename,zval,atom_types,atom_counts):
 	"""
 	reads the bader results (BCF) and calculates the charge of the different atom types

@@ -8,6 +8,7 @@ vasp				/ Modul mit Funktionen
 plot_HILLSPOT.py	/ plottet Metadynamic Hills
 1_plot_LOCPOT+Fermi.py	/plottet das Potential und die Fermi energie über die länge der Zelle
 1_check_temp.py
+1_density_water.py  / checks denstiy profile of water along z
 
 bader_analyse.py
 1_potentiostat.py
