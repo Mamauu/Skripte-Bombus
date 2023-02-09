@@ -1,0 +1,56 @@
+#!/bin/bash
+#SBATCH -J 4_1V_meta
+#SBATCH -p ib
+#SBATCH --ntasks 72
+#SBATCH --nodes 3
+#SBATCH --cpus-per-task 1
+#SBATCH --time=500:00:00
+#SBATCH --mem-per-cpu 4G
+
+# Module initialisieren und Modul fuer Intel (wegen Intel MPI) laden
+. /etc/profile.d/module.sh
+module load intel/2022
+module load vasp/6.2.0
+
+# Lokales Arbeitsverzeichnis anlegen
+MYWORKDIR=$PWD/$SLURM_JOBID
+mkdir $MYWORKDIR
+JOBDIR=$PWD
+
+# Kopiere die Eingabedatei aus dem Homeverzeichnis in das Arbeitsverzeichnis
+cp $JOBDIR/* $MYWORKDIR
+
+# Ins Arbeitsverzeichnis wechseln und Rechnung starten
+cd $MYWORKDIR
+
+# Erzeuge Hostfile, in dem steht wohin der Job verteilt werden soll
+srun -l hostname | awk '{print $2}' | sort > machinefile_$SLURM_JOBID
+
+mkdir vasp_data
+mkdir bader_data
+
+python3 1_potentiostat.py
+
+rm CHG
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
