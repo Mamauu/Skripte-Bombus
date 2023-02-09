@@ -1,5 +1,5 @@
 # Skripte Bombus
-Skripte zum laufen und analysieren von Vasp Rechnungen mit dem Potentiostaten von Surendralal at al.
+Skripte zum ausführen und analysieren von Vasp Rechnungen mit dem Potentiostaten von Surendralal at al.
 Surendralal at. al. "First-Principles Approach to Model Electrochemical Reactions: Understanding the Fundamental Mechanisms behind Mg Corrosion." doi: 10.1103/PhysRevLett.120.246801.
 
 #vasp					/ Modul mit Funktionen
